@@ -7,15 +7,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
-import java.net.http.HttpHeaders;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -29,24 +32,19 @@ public class HubspotAuthService {
     public String geraToken(String codigo, AuthDTO authDTO, HttpSession session)
             throws URISyntaxException, JsonProcessingException {
 
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("grant_type", authDTO.getGrantType());
-        requestBody.put("client_id", authDTO.getClientId());
-        requestBody.put("client_secret", authDTO.getClientSecret());
-        requestBody.put("redirect_uri", authDTO.getRedirectUri());
-        requestBody.put("code", authDTO.getCode());
+        String requestBody = "grant_type=" + authDTO.getGrantType() + "&client_id=" + authDTO.getClientId()
+                + "&client_secret=" + authDTO.getClientSecret() + "&redirect_uri=" + authDTO.getRedirectUri() + "&code="
+                + authDTO.getCode();
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        Map<String, String> headersMap = new HashMap<>();
+        headersMap.put("Content-Type", "application/x-www-form-urlencoded");
 
-        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<Map<String, String>>(requestBody);
-        requestEntity.getHeaders().add("Content-Type", "application/x-www-form-urlencoded");
+        HttpHeaders headers = new HttpHeaders();
+        headersMap.forEach(headers::set);
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                hubspotTokenUrl,
-                HttpMethod.POST,
-                requestEntity,
-                Map.class);
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<Map> response = restTemplate.postForEntity(hubspotTokenUrl, requestEntity, Map.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> tokens = response.getBody();
