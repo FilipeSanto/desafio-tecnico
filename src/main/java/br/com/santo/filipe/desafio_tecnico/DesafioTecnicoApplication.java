@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DesafioTecnicoApplication {
 
 	public static void main(String[] args) {
+//		DatabaseInitializer.initialize();
 		SpringApplication.run(DesafioTecnicoApplication.class, args);
 	}
 
