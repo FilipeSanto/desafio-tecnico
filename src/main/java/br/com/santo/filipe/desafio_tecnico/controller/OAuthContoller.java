@@ -25,8 +25,6 @@ public class OAuthContoller {
     @Autowired
     AuthenticationService authenticationService;
 
-    private final Map<String, String> refreshTokenStore = new HashMap<>();
-
     @GetMapping("/install")
     public ResponseEntity<Void> installApp() {
         String url = authenticationService.generateAuthorizationUrl();
@@ -37,7 +35,7 @@ public class OAuthContoller {
     public String handleCallback(@RequestParam("code") String code, HttpSession session)
             throws URISyntaxException, JsonProcessingException {
         authenticationService.geraToken(code, session);
-        return "";
+        return session.getAttribute("Authorization").toString();
 
     }
 

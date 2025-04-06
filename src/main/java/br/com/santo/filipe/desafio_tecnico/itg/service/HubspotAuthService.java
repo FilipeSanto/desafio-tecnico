@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class HubspotAuthService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String geraToken(String codigo, AuthDTO authDTO, HttpSession session)
+    public HttpSession geraToken(String codigo, AuthDTO authDTO, HttpSession session)
             throws URISyntaxException, JsonProcessingException {
 
         String requestBody = "grant_type=" + authDTO.getGrantType() + "&client_id=" + authDTO.getClientId()
@@ -51,15 +52,12 @@ public class HubspotAuthService {
             assert tokens != null;
             String accessToken = (String) tokens.get("access_token");
             String refreshToken = (String) tokens.get("refresh_token");
-            session.setAttribute("accessToken", accessToken);
+            session.setAttribute("Authorization", "Bearer " + accessToken);
             session.setAttribute(session.getId(), refreshToken);
 
-            System.out.println("Access Token: " + accessToken);
-            System.out.println("Refresh Token: " + refreshToken);
-
-            return "Token gerado com sucesso!";
+            return session;
         } else {
-            return "Erro ao gerar token!";
+            return session;
         }
 
     }

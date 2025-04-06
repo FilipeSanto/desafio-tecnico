@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.ServerProperties.Reactive.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class AuthenticationService {
                 "&response_type=code";
     }
 
-    public String geraToken(String code, HttpSession session)
+    public HttpSession geraToken(String code, HttpSession session)
             throws URISyntaxException, JsonProcessingException {
         return hubspotAuthService.geraToken(code, buildAuthorizeDto(code), session);
     }
