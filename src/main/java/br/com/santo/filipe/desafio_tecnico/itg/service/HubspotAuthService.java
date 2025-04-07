@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.santo.filipe.desafio_tecnico.models.Authorization.AuthorizationDTO;
+import br.com.santo.filipe.desafio_tecnico.utils.DesafioUtils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,10 +15,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class HubspotAuthService {
 
     @Value("${hubspot.token.url}")
@@ -50,7 +59,11 @@ public class HubspotAuthService {
             assert tokens != null;
             String accessToken = (String) tokens.get("access_token");
             String refreshToken = (String) tokens.get("refresh_token");
-            session.setAttribute("Authorization", "Bearer " + accessToken);
+            try {
+                session.setAttribute("Authorization", "Bearer " + DesafioUtils.encrypt(accessToken));
+            } catch (Exception e) {
+                log.error("Erro ao criptrografar token", e.getMessage());
+            }
             session.setAttribute(session.getId(), refreshToken);
 
             return session;
@@ -59,4 +72,5 @@ public class HubspotAuthService {
         }
 
     }
+
 }

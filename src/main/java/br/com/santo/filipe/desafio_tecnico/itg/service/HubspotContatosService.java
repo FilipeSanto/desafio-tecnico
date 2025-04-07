@@ -10,11 +10,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import br.com.santo.filipe.desafio_tecnico.models.Contact.ContactDTO;
 import br.com.santo.filipe.desafio_tecnico.models.Contact.ContactResponseDTO;
+import br.com.santo.filipe.desafio_tecnico.utils.DesafioUtils;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class HubspotContatosService {
 
     @Value("${hubspot.register.contact.url}")
@@ -26,7 +28,11 @@ public class HubspotContatosService {
 
         Map<String, String> headersMap = new HashMap<>();
         headersMap.put("Content-Type", "application/json");
-        headersMap.put("Authorization", authorization.replace("Bearer ", ""));
+        try {
+            headersMap.put("Authorization", DesafioUtils.decrypt(authorization));
+        } catch (Exception e) {
+            log.error("Erro ao decriptrogrfar Token", e.getMessage());
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headersMap.forEach(headers::set);

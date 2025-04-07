@@ -21,7 +21,7 @@ public class HubspotWebHookService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public WebhookEventDTO consultaWebHook(String authorization) {
+    public WebhookEventDTO webhookConsult(String authorization) {
         Map<String, String> headersMap = new HashMap<>();
         headersMap.put("Content-Type", "application/json");
         headersMap.put("authorization", authorization);

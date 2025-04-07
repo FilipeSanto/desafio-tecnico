@@ -3,6 +3,7 @@ package br.com.santo.filipe.desafio_tecnico.service;
 import br.com.santo.filipe.desafio_tecnico.itg.service.HubspotAuthService;
 import br.com.santo.filipe.desafio_tecnico.models.Authorization.AuthorizationDTO;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -15,6 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@Slf4j
 public class AuthenticationService {
 
     @Value("${hubspot.client.id}")
@@ -35,13 +37,19 @@ public class AuthenticationService {
         return authUrl +
                 "?client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8)
                 + "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)
-                + "&scope=" + escope
-                + "&response_type=code";
+                + "&scope=" + escope;
     }
 
-    public HttpSession generateToken(String code, HttpSession session)
-            throws URISyntaxException, JsonProcessingException {
-        return hubspotAuthService.authorization(code, buildAuthorizeDto(code), session);
+    public HttpSession generateToken(String code, HttpSession session) {
+        try {
+            return hubspotAuthService.authorization(code, buildAuthorizeDto(code), session);
+
+        } catch (URISyntaxException | JsonProcessingException e) {
+            log.error("Erro ao gerar token", e.getMessage());
+            return null;
+
+        }
+
     }
 
     private AuthorizationDTO buildAuthorizeDto(String code) {
