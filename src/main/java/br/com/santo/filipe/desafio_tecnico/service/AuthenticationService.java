@@ -1,14 +1,13 @@
 package br.com.santo.filipe.desafio_tecnico.service;
 
-import br.com.santo.filipe.desafio_tecnico.domain.AuthDTO;
 import br.com.santo.filipe.desafio_tecnico.itg.service.HubspotAuthService;
+import br.com.santo.filipe.desafio_tecnico.models.Authorization.AuthorizationDTO;
 import jakarta.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Reactive.Session;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
@@ -26,10 +25,6 @@ public class AuthenticationService {
     private String redirectUri;
     @Value("${hubspot.auth.url}")
     private String authUrl;
-    @Value("${hubspot.token.url}")
-    private String tokenUrl;
-    @Value("${hubspot.api.url}")
-    private String apiUrl;
     @Value("${hubspot.scope}")
     private String escope;
 
@@ -38,19 +33,19 @@ public class AuthenticationService {
 
     public String generateAuthorizationUrl() {
         return authUrl +
-                "?client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8) +
-                "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8) +
-                "&scope=" + escope +
-                "&response_type=code";
+                "?client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)
+                + "&scope=" + escope
+                + "&response_type=code";
     }
 
-    public HttpSession geraToken(String code, HttpSession session)
+    public HttpSession generateToken(String code, HttpSession session)
             throws URISyntaxException, JsonProcessingException {
-        return hubspotAuthService.geraToken(code, buildAuthorizeDto(code), session);
+        return hubspotAuthService.authorization(code, buildAuthorizeDto(code), session);
     }
 
-    private AuthDTO buildAuthorizeDto(String code) {
-        return AuthDTO.builder()
+    private AuthorizationDTO buildAuthorizeDto(String code) {
+        return AuthorizationDTO.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .code(code)

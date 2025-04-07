@@ -1,4 +1,4 @@
-package br.com.santo.filipe.desafio_tecnico.domain.Contatos;
+package br.com.santo.filipe.desafio_tecnico.models.Contact;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class ContatoDTO {
-    private ContatoPropertiesDTO properties;
+public class ContactDTO {
+    private ContactPropertiesDTO properties;
 
 }

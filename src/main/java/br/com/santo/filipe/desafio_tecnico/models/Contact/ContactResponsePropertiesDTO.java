@@ -1,4 +1,4 @@
-package br.com.santo.filipe.desafio_tecnico.domain.Contatos;
+package br.com.santo.filipe.desafio_tecnico.models.Contact;
 
 import java.time.ZonedDateTime;
 
@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class ContatoRespondePropertiesDTO {
+public class ContactResponsePropertiesDTO {
     private String company;
     private ZonedDateTime createdate;
     private String email;

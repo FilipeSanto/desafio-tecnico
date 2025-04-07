@@ -1,4 +1,4 @@
-package br.com.santo.filipe.desafio_tecnico.domain;
+package br.com.santo.filipe.desafio_tecnico.models.Authorization;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,7 +12,7 @@ import lombok.*;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthDTO {
+public class AuthorizationDTO {
     private String clientId;
     private String clientSecret;
     private String grantType;
