@@ -1,13 +1,13 @@
 package br.com.santo.filipe.desafio_tecnico.service;
 
-import br.com.santo.filipe.desafio_tecnico.itg.service.HubspotContactService;
-import br.com.santo.filipe.desafio_tecnico.models.Contact.ContactDTO;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import br.com.santo.filipe.desafio_tecnico.itg.service.HubspotContactService;
+import br.com.santo.filipe.desafio_tecnico.models.Contact.ContactDTO;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
